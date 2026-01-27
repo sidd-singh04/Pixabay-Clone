@@ -9,7 +9,6 @@ import FavoritesHeader from "./components/ui/FavoritesHeader";
 
 const App = () => {
   const [query, setQuery] = useState();
-  const [page, setPage] = useState(1);
   const [showFavorites, setShowFavorites] = useState(false);
 
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
@@ -22,20 +21,16 @@ const App = () => {
     resetImages,
   } = useImageFetch();
 
+  // Fetch images when query changes
   useEffect(() => {
-    fetchImages(query, 1, false);
-  }, [query]);
-
-  useEffect(() => {
-    if (page > 1) {
-      fetchImages(query, page, true);
+    if (query) {
+      fetchImages(query, 1, false);
     }
-  }, [page]);
+  }, [query]);
 
   const handleSearch = () => {
     if (!query.trim()) return;
 
-    setPage(1);
     resetImages();
     fetchImages(query, 1, false);
     setShowFavorites(false);
@@ -44,7 +39,6 @@ const App = () => {
   const handleCategoryClick = (cat) => {
     const searchTerm = cat === "Trending" ? "nature" : cat;
     setQuery(searchTerm);
-    setPage(1);
     resetImages();
     fetchImages(searchTerm, 1, false);
     setShowFavorites(false);
